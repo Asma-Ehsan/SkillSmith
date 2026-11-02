@@ -3,7 +3,17 @@ import bcrypt from "bcryptjs";
 
 //this regex pattern is used to validate email addresses. It checks for a valid email format.
 const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/*
+^: the text must start here.
+[^\s@]+: one or more characters that are not a space and not @. This is the part before @.
+@: there must be one @ sign.
+[^\s@]+: the part after @, like gmail.
+\.: a real dot. The \ is needed because a plain . means “any character” in regex.
+[^\s@]+: the ending, like com.
+$: the text must end here.*/
 
+// Document is a Mongoose type. It has things like _id, save(), and isModified().
+//interface is used to define the structure(Shape) of the object in TypeScript. It gives us type safety and autocompletion when working with user documents in our codebase.
 export interface IUser extends Document {
     name: string;
     email: string;
@@ -18,6 +28,7 @@ export interface IUser extends Document {
     comparePassword: (password: string) => Promise<boolean>;
 };
 
+//Schema<IUser> means “a schema for users shaped like IUser”
 const userSchema: Schema<IUser> = new mongoose.Schema({
     name: { type: String, required: [true, "Please enter your name"] },
     email: {
@@ -25,7 +36,10 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
         required: [true, "Please enter your email"], 
         unique: true,
         validate:{
+            //function that receives the email as value
             validator: function(value: string){
+                //.test() is a JS method that every regex pattern has. emailRegexPattern is a regex object. Every regex object comes with a built-in .test() method.
+                //it gives true if value matches the regex pattern, fakse otherwise
                 return emailRegexPattern.test(value);
             }, 
             message: "Please enter a valid email!",
@@ -51,16 +65,18 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
 },{timestamps: true});
 
 //Hash Password before saving
-userSchema.pre<IUser>('save', async function () {
+userSchema.pre('save', async function () { //<IUser> tells TypeScript that the document being saved is of type user.
     if(!this.isModified('password')) return; // If password is not modified, skip hashing
     this.password = await bcrypt.hash(this.password, 10);
 });
 
 //compare Password
 userSchema.methods.comparePassword = async function(enteredPassword: string) : Promise<boolean>{
+    //bcrypt hashes the entered password the same way and checks if both match.
     return await bcrypt.compare(enteredPassword, this.password); //this.password = hashed password stored in the DB
 }
 
+//userModel: Model<IUser>: a label saying “a model whose documents look like IUser”.
 const userModel: Model<IUser> = mongoose.model("User", userSchema);
 
 export default userModel;

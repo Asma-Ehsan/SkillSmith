@@ -4,6 +4,7 @@ export const app = express();
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import {ErrorMiddleware} from "./middleware/error";
+import userRouter from "./routes/userRoutes";
 
 //body parser
 app.use(express.json({limit: "50mb"})); //Parses JSON request data into a JS object.limit: "50mb" allows bodies up to 50 MB.
@@ -23,6 +24,9 @@ app.get("/test", (req: Request,res:Response, next:NextFunction) => {
         message: "Server is running"
     })
 });
+
+//routes
+app.use("/api/v1", userRouter);
 
 //unknown route: this means that the user has accessed a route that does not exist in the server.
 app.use((req: Request,res:Response, next:NextFunction) => {
