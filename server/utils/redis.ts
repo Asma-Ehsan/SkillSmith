@@ -9,4 +9,5 @@ const redisClient = () => {
     throw new Error("Redis connection failed!");
 };
 
+// new Redis(): creates a connection to the Redis server.
 export const redis = new Redis(redisClient());
