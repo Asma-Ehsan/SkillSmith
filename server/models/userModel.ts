@@ -1,5 +1,7 @@
+require("dotenv").config();
 import mongoose, {Document, Model, Schema} from "mongoose";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 //this regex pattern is used to validate email addresses. It checks for a valid email format.
 const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,6 +28,8 @@ export interface IUser extends Document {
     isVerified: boolean;
     courses: Array<{courseId: string}>;
     comparePassword: (password: string) => Promise<boolean>;
+    SignAccessToken: () => string;
+    SignRefreshToken: () => string;
 };
 
 //Schema<IUser> means “a schema for users shaped like IUser”
@@ -74,7 +78,17 @@ userSchema.pre('save', async function () { //<IUser> tells TypeScript that the d
 userSchema.methods.comparePassword = async function(enteredPassword: string) : Promise<boolean>{
     //bcrypt hashes the entered password the same way and checks if both match.
     return await bcrypt.compare(enteredPassword, this.password); //this.password = hashed password stored in the DB
-}
+};
+
+//Sign Access Token
+userSchema.methods.SignAccessToken = function(){
+    return jwt.sign({id: this._id}, process.env.ACCESS_TOKEN || '')
+};
+
+//sign refresh token
+userSchema.methods.SignRefreshToken = function(){
+    return jwt.sign({id: this._id}, process.env.REFRESH_TOKEN || '')
+};
 
 //userModel: Model<IUser>: a label saying “a model whose documents look like IUser”.
 const userModel: Model<IUser> = mongoose.model("User", userSchema);
