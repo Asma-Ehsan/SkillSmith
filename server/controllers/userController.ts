@@ -7,6 +7,7 @@ import ejs from "ejs";
 import path from "node:path";
 import sendMail from "../sendMail";
 import { sendToken } from "../utils/jwt";
+import { redis } from "../utils/redis";
 
 require("dotenv").config();
 
@@ -142,6 +143,8 @@ export const logoutUser = catchAsyncError(async(req:Request, res:Response, next:
         res.cookie("accessToken", "", {maxAge: 1});
         res.cookie("refreshToken", "", {maxAge: 1});
 
+        const userId = req.user?._id?.toString() || '';
+        redis.del(userId);
         res.status(200).json({
             success: true,
             message: "User logged out successfully!",
@@ -149,4 +152,5 @@ export const logoutUser = catchAsyncError(async(req:Request, res:Response, next:
     } catch (error:any) {
          return next(new ErrorHandler(error.message, 400));
     }
-})
+});
+
