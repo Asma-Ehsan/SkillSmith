@@ -130,8 +130,23 @@ export const loginUser = catchAsyncError(async(req:Request, res:Response, next:N
         if(!isPasswordMatched) return next(new ErrorHandler("Invalid email or password", 400));
 
         sendToken(user, 200, res);
-        
+
     } catch (error:any) {
         return next(new ErrorHandler(error.message, 400));
+    }
+});
+
+//logout user
+export const logoutUser = catchAsyncError(async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        res.cookie("accessToken", "", {maxAge: 1});
+        res.cookie("refreshToken", "", {maxAge: 1});
+
+        res.status(200).json({
+            success: true,
+            message: "User logged out successfully!",
+        })
+    } catch (error:any) {
+         return next(new ErrorHandler(error.message, 400));
     }
 })
