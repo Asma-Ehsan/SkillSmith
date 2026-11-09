@@ -27,7 +27,7 @@ export const ErrorMiddleware = (err: any, req:Request, res:Response, next:NextFu
 
     //jwt expired
     if(err.name === "TokenExpiredError"){
-        const message = `Your url is expired. Please try again later!`
+        const message = `Your url is expired. Please refresh or try again later!`
         err = new ErrorHandler(message, 400);
     }
 
