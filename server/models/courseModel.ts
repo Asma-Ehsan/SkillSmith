@@ -67,7 +67,6 @@ const commentSchema = new Schema<IComment>({
 
 const courseDataSchema = new Schema<ICourseData>({
     videoUrl: String,
-    videoThumbnail:Object,
     title: String,
     videoSection: String,
     videoLength: Number,
@@ -82,7 +81,7 @@ const courseSchema = new Schema<ICourse>({
     description: {type: String, required: true},
     price: {type: Number, required: true},
     estimatedPrice:  {type: Number},
-    thumbnail: {public_id: {required: true, type: String}, url: {required: true, type: String}},
+    thumbnail: {public_id: {type: String}, url: {type: String}},
     tags: {type: String, required: true},
     level: {type: String, required: true},
     demoUrl: {type: String, required: true},
