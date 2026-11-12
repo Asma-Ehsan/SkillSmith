@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import {ErrorMiddleware} from "./middleware/error";
 import userRouter from "./routes/userRoutes";
 import courseRouter from "./routes/courseRoute";
+import orderRouter from "./routes/orderRoute";
 
 //body parser
 app.use(express.json({limit: "50mb"})); //Parses JSON request data into a JS object.limit: "50mb" allows bodies up to 50 MB.
@@ -29,6 +30,7 @@ app.get("/test", (req: Request,res:Response, next:NextFunction) => {
 //routes
 app.use("/api/v1", userRouter);
 app.use("/api/v1", courseRouter);
+app.use("/api/v1", orderRouter);
 
 //unknown route: this means that the user has accessed a route that does not exist in the server.
 app.use((req: Request,res:Response, next:NextFunction) => {
