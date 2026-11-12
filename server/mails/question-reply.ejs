@@ -145,30 +145,6 @@
                   <div class="card answer">
                     <div><%= answerText || "answer" %></div>
                   </div>
-                  <% if (typeof viewLink !== 'undefined' && viewLink) { %>
-                  <div>
-                    <a
-                      class="cta"
-                      href="<%= viewLink %>"
-                      target="_blank"
-                      rel="noopener"
-                      >Open course</a
-                    >
-                  </div>
-                  <p
-                    class="muted"
-                    style="
-                      font-size: 12px;
-                      margin-top: 10px;
-                      word-break: break-all;
-                    "
-                  >
-                    Or open this link:
-                    <a href="<%= viewLink %>" target="_blank" rel="noopener"
-                      ><%= viewLink %></a
-                    >
-                  </p>
-                  <% } %>
                 </td>
               </tr>
               <tr>
