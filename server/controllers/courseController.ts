@@ -236,6 +236,9 @@ export const addAnswer = catchAsyncError(async(req: Request, res: Response, next
             const data = {
                 name: question.user.name,
                 title: courseContent.title,
+                questionText: question.question,   // the question text from your schema
+                replierName: req.user?.name,       // who replied
+                answerText: answer, 
             }
 
             const html = await ejs.renderFile(path.join(__dirname, "../mails/question-reply.ejs"), data);
